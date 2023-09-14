@@ -17,4 +17,26 @@ io.on('connection',function(socket){
     socket.on('disconnect', function(){
         console.log('usuario desconectou');
     });
+
+    socket.on('msgParaServidor',function(data){
+        //dialogo
+        socket.emit('msgParaCliente', 
+        {apelido: data.apelido, mensagem: data.mensagem}
+        );
+
+        socket.broadcast.emit('msgParaCliente', 
+        {apelido: data.apelido, mensagem: data.mensagem}
+        );
+
+        //atualiza participantes
+        if(parseInt(data.apelido_atualizado_clientes) == 0){
+            socket.emit('participantesParaCliente', 
+            {apelido: data.apelido}
+            );
+
+            socket.broadcast.emit('participantesParaCliente', 
+            {apelido: data.apelido}
+            );
+        }
+    });
 });
